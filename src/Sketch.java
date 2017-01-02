@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import processing.serial.Serial;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Sketch extends PApplet {
@@ -17,6 +18,7 @@ public class Sketch extends PApplet {
     ArrayList<float[]> lineFloats = new ArrayList<>();
     float w = 256;
     boolean[] flip = {false, true, false};
+    Robot robot;
 
     public void settings() {
         size(800, 600, OPENGL);
@@ -37,7 +39,11 @@ public class Sketch extends PApplet {
             cama[i] = new MomentumAverage(.01f);
             axyz[i] = new MomentumAverage(.15f);
         }
-
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
         reset();
 
     }
@@ -120,57 +126,62 @@ public class Sketch extends PApplet {
         popMatrix();
 
         if (keyPressed) {
-            int index = -1;
-            for (int i = 0; i < lineFloats.size(); i++) {
-                if (lineFloats.get(i)[0] == x && lineFloats.get(i)[1] == y && lineFloats.get(i)[2] == z) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index == -1) {
-                int color[];
-                switch (key) {
-                    case 'r':
-                    case 'R':
-                        color = new int[]{255, 0, 0};
-                        break;
-                    case 'b':
-                    case 'B':
-                        color = new int[]{0, 0, 255};
-                        break;
-                    case 'g':
-                    case 'G':
-                        color = new int[]{0, 255, 0};
-                        break;
-                    case 'k':
-                    case 'K':
-                        color = new int[]{0, 0, 0};
-                        break;
-                    case 'w':
-                    case 'W':
-                        color = new int[]{255, 255, 255};
-                        break;
-                    default:
-                        color = null;
-                }
-                if (color != null)
-                    lineFloats.add(new float[]{
-                            x,
-                            y,
-                            z,
-                            color[0],
-                            color[1],
-                            color[2]});
+            if (key == 'n') {
+                reset();
+            } else if (key == 'm') {
+                robot.mouseMove((int) x * 5, (int) y * 5);
             } else {
-                switch (key) {
-                    case 'd':
-                    case 'D':
-                        lineFloats.remove(index);
+                int index = -1;
+                for (int i = 0; i < lineFloats.size(); i++) {
+                    if (lineFloats.get(i)[0] == x && lineFloats.get(i)[1] == y && lineFloats.get(i)[2] == z) {
+                        index = i;
                         break;
+                    }
+                }
+                if (index == -1) {
+                    int color[];
+                    switch (key) {
+                        case 'r':
+                        case 'R':
+                            color = new int[]{255, 0, 0};
+                            break;
+                        case 'b':
+                        case 'B':
+                            color = new int[]{0, 0, 255};
+                            break;
+                        case 'g':
+                        case 'G':
+                            color = new int[]{0, 255, 0};
+                            break;
+                        case 'k':
+                        case 'K':
+                            color = new int[]{0, 0, 0};
+                            break;
+                        case 'w':
+                        case 'W':
+                            color = new int[]{255, 255, 255};
+                            break;
+                        default:
+                            color = null;
+                    }
+                    if (color != null)
+                        lineFloats.add(new float[]{
+                                x,
+                                y,
+                                z,
+                                color[0],
+                                color[1],
+                                color[2]});
+                } else {
+                    switch (key) {
+                        case 'd':
+                        case 'D':
+                            lineFloats.remove(index);
+                            break;
+                    }
                 }
             }
         }
-
         if (mousePressed && mouseButton == LEFT)
             msg("defining boundaries");
     }

@@ -14,8 +14,9 @@ public class Sketch extends PApplet {
     Normalize n[] = new Normalize[SENSORS];
     MomentumAverage cama[] = new MomentumAverage[SENSORS];
     MomentumAverage axyz[] = new MomentumAverage[SENSORS];
-    int[][][] lineXYZ = new int[256][256][256];
     ArrayList<float[]> lineFloats = new ArrayList<>();
+    int drawShape = 0;
+    int drawSize = 18;
     float w = 256;
     boolean[] flip = {false, true, false};
     Robot robot;
@@ -107,7 +108,10 @@ public class Sketch extends PApplet {
                     lineFloats.get(i)[2]);
             fill(lineFloats.get(i)[3], lineFloats.get(i)[4], lineFloats.get(i)[5], 200);
             noStroke();
-            sphere(10);
+            if (lineFloats.get(i)[6] == 0)
+                sphere(lineFloats.get(i)[7]);
+            else if (lineFloats.get(i)[6] == 1)
+                box(lineFloats.get(i)[7]);
             popMatrix();
         }
 
@@ -120,9 +124,12 @@ public class Sketch extends PApplet {
                 x,
                 y,
                 z);
-        fill(255, 160, 0, 200);
-        noStroke();
-        sphere(18);
+
+        stroke(0, 100);
+        if (drawShape == 0)
+            sphere(drawSize);
+        else if (drawShape == 1)
+            box(drawSize);
         popMatrix();
 
         if (keyPressed) {
@@ -132,6 +139,16 @@ public class Sketch extends PApplet {
                 robot.mouseMove((int) x * 5, (int) y * 5);
             } else if (key == 'c' || key == 'C') {
                 msg("Calibrate!");
+            } else if (key == 's' || key == 'S') {
+                drawShape = (drawShape == 0) ? 1 : 0;
+            } else if (key == 'p' || key == 'P') {
+                save("pic-" + System.currentTimeMillis() + ".jpeg");
+            } else if (key == '-') {
+                if (drawSize > 1)
+                    drawSize--;
+            } else if (key == '+') {
+                if (drawSize < 60)
+                    drawSize++;
             } else {
                 int index = -1;
                 for (int i = 0; i < lineFloats.size(); i++) {
@@ -173,7 +190,9 @@ public class Sketch extends PApplet {
                                 z,
                                 color[0],
                                 color[1],
-                                color[2]});
+                                color[2],
+                                drawShape,
+                                drawSize});
                 } else {
                     switch (key) {
                         case 'd':

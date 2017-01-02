@@ -62,7 +62,7 @@ public class Sketch extends PApplet {
                 for (int i = 0; i < SENSORS; i++)
                     xyz[i] = Float.parseFloat(parts[i]);
 
-                if (mousePressed && mouseButton == LEFT)
+                if (keyPressed && (key == 'c' || key == 'C'))
                     for (int i = 0; i < SENSORS; i++)
                         n[i].note(xyz[i]);
 
@@ -126,10 +126,12 @@ public class Sketch extends PApplet {
         popMatrix();
 
         if (keyPressed) {
-            if (key == 'n') {
+            if (key == 'n' || key == 'N') {
                 reset();
-            } else if (key == 'm') {
+            } else if (key == 'm' || key == 'M') {
                 robot.mouseMove((int) x * 5, (int) y * 5);
+            } else if (key == 'c' || key == 'C') {
+                msg("Calibrate!");
             } else {
                 int index = -1;
                 for (int i = 0; i < lineFloats.size(); i++) {
@@ -182,8 +184,6 @@ public class Sketch extends PApplet {
                 }
             }
         }
-        if (mousePressed && mouseButton == LEFT)
-            msg("defining boundaries");
     }
 
 

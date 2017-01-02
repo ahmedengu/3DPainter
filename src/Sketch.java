@@ -20,6 +20,8 @@ public class Sketch extends PApplet {
     float w = 256;
     boolean[] flip = {false, true, false};
     Robot robot;
+    boolean drawPainter = true;
+    boolean mousePlay = true;
 
     public void settings() {
         size(800, 600, OPENGL);
@@ -27,7 +29,9 @@ public class Sketch extends PApplet {
 
     public void setup() {
         frameRate(25);
-
+        Game.x = (int) random(width);
+        Game.y = height - Game.base;
+        Game.sketch = this;
         textMode(SHAPE);
 
         String[] serialList = Serial.list();
@@ -51,7 +55,25 @@ public class Sketch extends PApplet {
 
     public void draw() {
         updateSerial();
-        drawBoard();
+        if (drawPainter)
+            drawBoard();
+        else {
+            camera();
+
+            if (mousePlay) {
+                float sw = w / div;
+                float sd = sw * (div - 1);
+                float x = axyz[0].avg * sd;
+                float y = axyz[1].avg * sd;
+                robot.mouseMove((int) x * 5, (int) y * 5);
+            }
+            if (keyPressed && key == '-') {
+                mousePlay = false;
+            } else if (keyPressed && key == '+') {
+                mousePlay = true;
+            }
+            Game.gameDraw();
+        }
     }
 
     void updateSerial() {
@@ -149,6 +171,8 @@ public class Sketch extends PApplet {
             } else if (key == '+') {
                 if (drawSize < 60)
                     drawSize++;
+            } else if (key == 'g' || key == 'G') {
+                drawPainter = false;
             } else {
                 int index = -1;
                 for (int i = 0; i < lineFloats.size(); i++) {

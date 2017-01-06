@@ -6,8 +6,8 @@ public class Game {
     static float x;
     static float y;
     static float gameScore = 0;
-    static float changeX = -5;
-    static float changeY = -5;
+    static float changeX = -4;
+    static float changeY = -4;
     static int gameOver = 0;
     static float Multiplier = 1.0f;
     static int gameLevel = 1;

@@ -24,7 +24,7 @@ public class Sketch extends PApplet {
     boolean mousePlay = true;
 
     public void settings() {
-        size(800, 600, OPENGL);
+        size(1366, 768, OPENGL);
     }
 
     public void setup() {
@@ -65,7 +65,8 @@ public class Sketch extends PApplet {
                 float sd = sw * (div - 1);
                 float x = axyz[0].avg * sd;
                 float y = axyz[1].avg * sd;
-                robot.mouseMove((int) x * 5, (int) y * 5);
+
+                robot.mouseMove((int) x * 9, 300);
             }
             if (keyPressed && key == '-') {
                 mousePlay = false;
@@ -171,7 +172,7 @@ public class Sketch extends PApplet {
             } else if (key == '+') {
                 if (drawSize < 60)
                     drawSize++;
-            } else if (key == 'g' || key == 'G') {
+            } else if (key == 'f' || key == 'F') {
                 drawPainter = false;
             } else {
                 int index = -1;
@@ -236,6 +237,7 @@ public class Sketch extends PApplet {
             cama[i].reset();
             axyz[i].reset();
         }
+        lineFloats.clear();
     }
 
     void msg(String msg) {
